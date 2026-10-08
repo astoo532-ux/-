@@ -1,239 +1,109 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>식민지 조선 인생 시뮬레이션 - 캐릭터 맞춤형</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>한국사2 Ⅰ. 일제 식민 통치와 민족 운동 · 역사 탐정단</title>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:"Malgun Gothic",sans-serif;background:#eee6d6;color:#2d2b28}
-#app{max-width:980px;margin:auto;padding:26px}.card{background:#fffaf0;border:2px solid #774736;border-radius:18px;padding:28px}
-h1,h2{color:#774736}button{border:0;border-radius:12px;padding:14px 18px;font-size:17px;font-weight:700;cursor:pointer;background:#774736;color:white}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.char,.option{background:#fff;color:#2d2b28;border:1px solid #b9ad96;border-radius:12px;padding:16px}
-.char{cursor:pointer}.option{display:block;width:100%;text-align:left;margin:10px 0}.statbar{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:14px 0}
-.stat{background:#f4eddf;padding:10px;border-radius:10px;text-align:center}.stat b{font-size:22px;color:#774736}.context,.hist,.warn,.ok{padding:15px;border-radius:10px;margin:15px 0}
-.context{background:#f7f0e4}.hist{background:#f0eadc;border-left:5px solid #8a6a2c}.warn{background:#f9e6e2;border-left:5px solid #8e473f}.ok{background:#e6f1e8;border-left:5px solid #4d6a57}
-textarea,input{width:100%;box-sizing:border-box;padding:10px;border:1px solid #aa9d86;border-radius:8px;font:inherit}textarea{min-height:100px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.label{font-weight:700;margin:16px 0 6px}
-@media(max-width:700px){
-.grid,.row{grid-template-columns:1fr}
-.statbar{grid-template-columns:repeat(2,1fr)}
-#app{padding:12px 10px 28px}
-.card{padding:18px 14px;border-radius:14px}
-h1{font-size:28px;line-height:1.25}
-h2{font-size:22px}
-.context,.hist,.warn,.ok{font-size:16px;line-height:1.7;padding:13px}
-.option{font-size:17px;line-height:1.5;min-height:64px;padding:16px 14px;margin:10px 0}
-button{font-size:17px;min-height:52px;width:100%}
-.stat{font-size:14px;padding:8px}
-.stat b{font-size:20px}
-textarea{min-height:120px;font-size:16px}
-input{font-size:16px;min-height:46px}
-}
-</style></head><body><div id="app"></div>
+:root{--bg:#e8ecf1;--card:#fff;--bd:#c5cdd8;--tx:#16202e;--mu:#5a6676;--ac:#b3261e;--bl:#2c5282;--ok:#1b7f4b;--no:#b3261e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12171f;--card:#1b2330;--bd:#33405280;--tx:#eef1f5;--mu:#9aa6b6;--ac:#ee6a5f;--bl:#7aa7e0;--ok:#4cc38a;--no:#ee6a5f}}
+:root[data-theme="dark"]{--bg:#12171f;--card:#1b2330;--bd:#33405280;--tx:#eef1f5;--mu:#9aa6b6;--ac:#ee6a5f;--bl:#7aa7e0;--ok:#4cc38a;--no:#ee6a5f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+h1,h2,h3{font-family:"Gowun Batang",Batang,serif;margin:.2em 0}
+.w{max-width:820px;margin:0 auto;padding:14px}
+header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--tx);padding-bottom:8px}
+header h1{font-size:18px}
+.mu{color:var(--mu);font-size:14px;margin:.3em 0}
+.g{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin:12px 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:12px 14px;margin:10px 0;color:inherit;text-align:left;font:inherit;width:100%;box-sizing:border-box}
+button{cursor:pointer;font:inherit;color:inherit}
+button.card:focus-visible{outline:2px solid var(--bl);outline-offset:1px}
+@media(hover:hover){button.card:hover{border-color:var(--bl)}}
+html{-webkit-text-size-adjust:100%}
+body{touch-action:manipulation;-webkit-tap-highlight-color:transparent;padding-bottom:96px}
+button,.card{-webkit-user-select:none;user-select:none;min-height:44px}
+#fb{position:fixed;left:0;right:0;bottom:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--bd);display:none;z-index:9}
+#fb .b{display:block;width:100%;max-width:820px;margin:0 auto;padding:14px}
+@media(min-width:700px){body{font-size:18px}.w{padding:24px}}
+.g .card{margin:0}
+.b{background:var(--tx);color:var(--bg);border:0;border-radius:6px;padding:11px 18px;font-weight:700;margin:6px 6px 0 0}
+.b:disabled{opacity:.35;cursor:not-allowed}
+.b.s{background:transparent;color:var(--tx);border:1px solid var(--tx)}
+.bar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:10px 0}
+.bar button{background:none;border:1px solid var(--bd);border-radius:6px;padding:4px 10px}
+.ok{border:2px solid var(--ok)}.no{border:2px solid var(--no)}
+.stamp{display:inline-block;border:3px solid;border-radius:4px;padding:0 10px;transform:rotate(-3deg);font-family:"Gowun Batang",serif;font-size:20px}
+.ok .stamp{color:var(--ok)}.no .stamp{color:var(--no)}
+.row{display:flex;gap:10px;align-items:center}.row>div{flex:1}
+.n{background:var(--bl);color:var(--bg);border-radius:50%;width:26px;height:26px;display:grid;place-items:center;font-weight:700;flex:none}
+.slot{border:2px dashed var(--bd);border-radius:6px;padding:14px;margin:10px 0;color:var(--mu);text-align:center;font-size:14px}
+.ctl{display:flex}.ctl button{background:none;border:1px solid var(--bd);border-radius:6px;margin-left:4px;min-width:44px;min-height:44px}
+.yr{color:var(--bl);font-weight:700;margin-right:6px}
+li{margin:6px 0}
+.big{font:700 34px "Gowun Batang",serif;margin:.2em 0}
+</style>
+</head>
+<body>
+<div class="w">
+<header><h1>🕵️ 역사 탐정단 · 한국사2</h1><button class="b s" id="sn" onclick="S.snd^=1;this.textContent=S.snd?'🔊':'🔇'" style="margin:0;padding:4px 10px">🔊</button></header>
+<div id="app"></div>
+</div>
+<div id="fb"></div>
 <script>
-const SUBMIT_URL="https://script.google.com/macros/s/AKfycbyNx21FX4ouJmm3WOUsPEHvTY_Fjx6-VqWUgRxas2nrhDm9loHGrMTV2-2JAlOGOAQ/exec";
-
-const chars=[
-{id:"student",name:"김영수",role:"17세 학생",intro:"경성의 중등학교 학생. 졸업·진학·친구 관계가 중요합니다.",start:{safe:5,life:4,resist:1,family:5}},
-{id:"worker",name:"박순희",role:"22세 공장 노동자",intro:"경성의 공장 노동자. 임금·해고 위험·동료 관계가 중요합니다.",start:{safe:4,life:6,resist:0,family:5}},
-{id:"farmer",name:"이정호",role:"24세 농촌 청년",intro:"충청도의 소작농 집안 청년. 가족 생계·공출·마을 관계가 중요합니다.",start:{safe:5,life:4,resist:0,family:6}},
-{id:"teacher",name:"최명자",role:"28세 교사",intro:"경기도 보통학교 교사. 학생 보호·학교 지시·교직 유지가 중요합니다.",start:{safe:4,life:5,resist:1,family:5}}
+// 스파이: [주제, [일반3장 + 스파이1장(마지막)], 해설]
+const SPY=[
+["무단 통치기(1910년대)의 통치 방식",[["헌병 경찰제","헌병이 일반 경찰 업무까지 맡아 민중을 감시·통제하였다."],["조선 태형령","한국인에게만 적용된 태형(곤장)으로 즉결 처분하였다."],["회사령","회사 설립을 총독 허가제로 하여 민족 자본 성장을 억제하였다."],["보통 경찰제","3·1 운동 이후 헌병 경찰을 보통 경찰로 바꾸었다."]],"<b>보통 경찰제</b>는 3·1 운동 이후 도입된 <b>문화 통치(1919~)</b>의 정책입니다. 나머지는 1910년대 무단 통치를 대표합니다. 다만 보통 경찰제 도입 뒤에도 경찰 관서와 인원은 오히려 늘었습니다."],
+["문화 통치기(1920년대)의 일제 정책",[["한글 신문 허용","동아일보·조선일보 등의 발행을 허가하였다(검열은 유지)."],["산미 증식 계획","일본의 식량 부족을 메우기 위해 쌀 증산을 추진하였다."],["치안 유지법","사회주의·독립운동 단속을 위해 제정하였다."],["지원병제","조선인을 전쟁에 동원하기 위해 시행하였다."]],"<b>지원병제</b>(1938)는 중일 전쟁 이후 <b>전시 체제기</b>의 정책입니다. 나머지는 1920년대 문화 통치기에 이루어졌습니다."],
+["일제의 식민 통치 정책이 <u>아닌</u> 것",[["토지 조사 사업","기한부 신고제로 진행되어 토지 소유 관계가 바뀌었다."],["국가 총동원법","인적·물적 자원을 전쟁에 동원할 수 있게 한 법이다."],["창씨개명","성과 이름을 일본식으로 바꾸도록 강요하였다."],["6·10 만세 운동","순종 인산일에 학생·사회주의 세력이 준비한 항일 운동이다."]],"<b>6·10 만세 운동</b>(1926)은 일제 정책이 아니라 한국인의 <b>민족 운동</b>입니다. 나머지는 일제의 식민 통치·동원 정책입니다."],
+["대한민국 임시정부의 활동",[["연통제·교통국","국내와 연결하는 비밀 행정·통신 조직이다."],["독립신문 발행","임시정부 기관지로 독립 의지를 알렸다."],["구미 위원부","미국 워싱턴에 설치하여 외교 활동을 전개하였다."],["신간회 창립","1927년 국내에서 비타협적 민족주의·사회주의 세력이 결성하였다."]],"<b>신간회</b>는 임시정부가 아니라 <b>국내</b>의 합법적 민족 유일당 단체입니다. 나머지는 임시정부(1919)의 활동입니다."],
+["1920년대 만주의 독립군 활동",[["봉오동 전투","홍범도의 연합 부대가 일본군을 격파하였다."],["청산리 대첩","김좌진의 북로군정서와 홍범도 부대 등이 승리하였다."],["자유시 참변","소련 적군에 의해 독립군이 무장 해제되고 큰 피해를 입었다."],["쌍성보 전투","지청천의 한국독립군이 중국군과 연합하여 싸웠다."]],"<b>쌍성보 전투</b>는 만주 사변(1931) 이후인 <b>1930년대</b> 한·중 연합 작전입니다. 나머지는 1920~21년의 일입니다."],
+["개인·소수의 거사로 일제 요인을 처단한 의열 투쟁",[["의열단","김원봉이 조직하고 「조선 혁명 선언」을 행동 지침으로 삼았다."],["한인 애국단","김구가 조직하여 이봉창·윤봉길 의거를 이끌었다."],["나석주 의거","식산 은행과 동양 척식 주식회사에 폭탄을 던졌다."],["영릉가 전투","양세봉의 조선 혁명군이 중국 의용군과 연합해 승리하였다."]],"<b>영릉가 전투</b>는 한·중 연합 <b>정규 무장 투쟁</b>입니다. 나머지는 소수가 거사를 벌인 <b>의열 투쟁</b>입니다."],
+["1920년대 사회 운동",[["조선 형평사","진주에서 백정 차별 철폐를 내세웠다."],["어린이날 제정","방정환이 조직한 천도교 소년회가 어린이날을 제정하였다."],["근우회","신간회의 자매 단체로 여성 운동을 전개하였다."],["동양 척식 주식회사","일제가 식민지 경영을 위해 세운 회사로, 토지 개간과 이민 등을 맡았다."]],"<b>동양 척식 주식회사</b>는 일제가 식민지 경영을 위해 세운 회사로, 민족의 사회 운동이 아닙니다. 나머지는 한국인이 벌인 <b>사회 운동</b>입니다."],
+["민족 문화 수호 노력",[["조선어 학회","한글 맞춤법 통일안을 만들고 사전 편찬을 추진하였다."],["박은식","『한국독립운동지사혈사』를 저술해 항일 투쟁을 정리하였다."],["신채호","『조선상고사』를 저술해 민족주의 사학을 세웠다."],["정체성론","한국은 중세 봉건 사회로 발전하지 못하고 고대 단계에 머물러 있다는 주장이다."]],"<b>정체성론</b>은 조선사 편수회에서 주장한 식민 사관입니다. 나머지는 우리 말·역사를 지키려는 <b>민족 문화 수호 운동</b>입니다."]
 ];
-
-const base=[
-["1937~1938","황민화 정책의 강화","중일전쟁 이후 일제는 황민화 정책을 강화했습니다."],
-["1938~1940","신사참배 압력","1930년대 후반 신사참배 강요가 학교와 사회 전반에서 강화되었습니다."],
-["1939~1940","창씨개명","창씨개명은 1939년 제도화되어 1940년 시행되었고 다양한 행정적·사회적 압력이 작동했습니다."],
-["1940","조선어 교육의 축소","전시체제 아래 조선어 교육과 사용 공간이 크게 축소되었습니다."],
-["1938 이후","국가총동원 체제","국가총동원법 이후 노동력·물자·생활 통제가 강화되었습니다."],
-["1940년대 초","공출과 생활 통제","전시체제가 강화되며 식량과 생활물자까지 통제되었습니다."],
-["1943~1944","전쟁 인력 동원의 확대","징병제는 1943년에 공포되어 1944년부터 시행되었습니다."],
-["1945","전쟁의 끝이 다가오다","1945년 8월 15일 일본이 패전하면서 식민지 지배는 끝났습니다."]
+// 타임라인: [제목, [연대순 5장 [연도, 제목, 설명]]]
+const TL=[
+["식민 통치 정책의 흐름",[["1910","회사령","회사 설립에 총독 허가를 요구한 법령."],["1912","토지 조사령","기한부 신고제로 토지 조사 사업의 근거가 됨."],["1920","산미 증식 계획","일본의 쌀 부족 해결을 위한 쌀 증산 계획."],["1938","국가 총동원법","전쟁 수행을 위한 인적·물적 자원 동원 법령."],["1944","징병제 시행","조선인 청년을 징집(1943 공포, 1944 시행)."]]],
+["3·1 운동과 항일 운동",[["1919.2","2·8 독립 선언","도쿄 유학생들이 독립을 선언."],["1919.3","3·1 운동","전국적 만세 운동으로 확산."],["1919.4","대한민국 임시정부 수립","상하이에서 민주 공화제로 수립."],["1926","6·10 만세 운동","순종 인산일에 일어난 만세 시위."],["1929","광주 학생 항일 운동","학생 충돌로 시작되어 전국으로 확산."]]],
+["무장 투쟁과 임시정부의 활동",[["1920.6","봉오동 전투","홍범도 부대 등이 일본군을 격파."],["1920.10","청산리 대첩","김좌진·홍범도 부대 등이 승리."],["1921","자유시 참변","독립군이 소련 적군에 의해 큰 피해."],["1932","윤봉길 의거","한인 애국단원이 훙커우 공원에서 거사."],["1940","한국광복군 창설","임시정부가 충칭에서 창설한 정규군."]]],
+["민족 운동과 사회 운동의 전개",[["1920","물산 장려 운동","평양에서 시작된 국산품 애용 운동."],["1923","암태도 소작 쟁의","고율 소작료에 맞선 농민 투쟁."],["1927","신간회 창립","비타협적 민족주의·사회주의 세력의 연대 단체."],["1929","원산 총파업","원산 노동자들의 대규모 파업."],["1933","한글 맞춤법 통일안","조선어 학회가 제정."]]]
 ];
-
-const S={
-student:[
-["학교에서 황국신민서사 암송과 각종 의식 참여를 요구합니다. 담임교사는 문제를 만들면 진학에 불리할 수 있다고 말합니다.",
- [["학교 활동에 별다른 말 없이 참여한다.",{safe:1,resist:-1},0],["불이익을 감수하고 참여하지 않겠다고 밝힌다.",{safe:-2,resist:2},0],["활동에는 참여하지만 친구들과 내 생각을 나눈다.",{safe:-1,resist:1},0],["진학을 위해 학교 요구에 적극적으로 맞춘다.",{safe:2,life:1,family:-1},1]]],
-["학교에서 신사참배 일정이 공지됩니다. 빠지면 교사에게 이유를 설명해야 하고 가족은 진학을 걱정합니다.",
- [["다른 학생들과 함께 참배한다.",{safe:1},0],["교사에게 이유를 말하고 참여하지 않는다.",{safe:-2,resist:2},0],["참배에는 참여하지만 개인적으로 의미를 두지 않는다.",{family:1,resist:1},0],["학교생활을 위해 의식에 성실히 참여한다.",{safe:2,life:1,family:-1},1]]],
-["새로운 씨를 신고하면 학교나 관공서 업무가 편해진다는 이야기가 들립니다. 가족은 진학을 생각하라고 합니다.",
- [["가족과 상의한 뒤 새로운 씨를 신고한다.",{safe:1,family:1},0],["불이익이 있더라도 기존 이름을 사용한다.",{safe:-1,resist:1},0],["신고는 하되 집에서는 원래 이름을 사용한다.",{life:1,family:1},0],["진학을 생각해 새 이름을 적극적으로 사용한다.",{safe:2,life:1,family:-1},1]]],
-["학교에서 조선어 수업이 줄고 일본어 사용을 강조합니다. 교사는 일본어를 잘하면 진학에 도움이 된다고 말합니다.",
- [["학교에서는 일본어를 사용하며 수업에 맞춘다.",{safe:1},0],["친구들과 따로 모여 조선어를 계속 배운다.",{safe:-1,resist:2},0],["학교 밖에서는 가족과 계속 조선어를 사용한다.",{family:1,resist:1},0],["진학을 위해 일본어 사용에 더 익숙해지려고 한다.",{safe:2,life:1,family:-1},1]]]
-],
-teacher:[
-["교사들에게 황국신민서사와 관련 의식을 학생들에게 철저히 지도하라는 지시가 내려옵니다.",
- [["학교 지시에 따라 정해진 수업과 의식을 진행한다.",{safe:1,resist:-1},0],["교장에게 문제를 제기하고 일부 지시를 거부한다.",{safe:-2,resist:2},0],["수업은 진행하되 학생들에게 강요하지 않으려 한다.",{safe:-1,resist:1,family:1},0],["학교 운영에 적극 협조해 모범 교사로 인정받는다.",{safe:2,life:1,family:-1},1]]],
-["학교 차원에서 학생과 교사의 신사참배 참여를 점검하라는 지시가 내려옵니다.",
- [["학교 일정에 따라 학생들과 함께 참배한다.",{safe:1},0],["교장에게 참여하지 않겠다고 밝힌다.",{safe:-2,resist:2},0],["참배는 하되 학생들에게 개인 선택을 강요하지 않는다.",{family:1,resist:1},0],["참배 지도를 성실히 맡아 학교의 신뢰를 얻는다.",{safe:2,life:1,family:-1},1]]],
-["학교 행정에서도 새 씨 사용이 늘어납니다. 학생과 학부모 앞에서 어떤 이름을 쓸지 결정해야 합니다.",
- [["학교에서는 새 씨를 사용하고 집에서는 기존 이름을 쓴다.",{safe:1,family:1},0],["학교에서도 기존 이름을 그대로 사용한다.",{safe:-1,resist:1},0],["가족과 상의해 새 씨를 신고한다.",{life:1,family:1},0],["교직 생활을 위해 새 이름을 적극적으로 사용한다.",{safe:2,life:1,family:-1},1]]],
-["조선어 수업이 줄고 일본어 중심 수업을 강화하라는 지시가 내려옵니다.",
- [["정해진 교육과정에 따라 일본어 중심으로 수업한다.",{safe:1},0],["수업 외 시간에 학생들에게 조선어를 더 가르친다.",{safe:-1,resist:2},0],["공식 수업은 따르되 학생들이 조선어를 쓰는 것을 막지 않는다.",{family:1,resist:1},0],["일본어 교육을 적극적으로 운영해 학교 평가를 높인다.",{safe:2,life:1,family:-1},1]]]
-],
-worker:[
-["공장에서 조회 시간마다 황국신민서사 암송과 각종 의식 참여를 요구합니다. 반장은 인사평가를 언급합니다.",
- [["동료들과 함께 정해진 활동에 참여한다.",{safe:1,resist:-1},0],["불이익을 감수하고 공개적으로 거부한다.",{safe:-2,resist:2},0],["참여는 하되 가까운 동료와 불만을 나눈다.",{safe:-1,resist:1},0],["직장 평가를 위해 적극적으로 참여한다.",{safe:2,life:1,family:-1},1]]],
-["공장 단위로 신사참배 참여가 공지됩니다. 빠지면 반장에게 이유를 설명해야 합니다.",
- [["동료들과 함께 참배한다.",{safe:1},0],["참배에 참여하지 않겠다고 밝힌다.",{safe:-2,resist:2},0],["참배에는 참여하지만 개인적으로 의미를 두지 않는다.",{family:1,resist:1},0],["직장생활을 위해 의식에 성실히 참여한다.",{safe:2,life:1,family:-1},1]]],
-["직장 서류에서 새 이름 사용을 요구하는 분위기가 강해집니다. 가족 생계를 책임져야 합니다.",
- [["직장에서는 새 씨를 사용하고 집에서는 기존 이름을 쓴다.",{safe:1,family:1},0],["직장에서도 기존 이름을 고수한다.",{safe:-1,resist:1},0],["가족과 상의해 새 씨를 신고한다.",{life:1,family:1},0],["직장생활을 위해 새 이름을 적극 사용한다.",{safe:2,life:1,family:-1},1]]],
-["공장에서는 일본어 사용을 장려합니다. 일본어를 잘하면 반장에게 좋은 평가를 받을 수 있습니다.",
- [["공장에서는 일본어를 사용한다.",{safe:1},0],["쉬는 시간에는 동료들과 조선어를 계속 쓴다.",{safe:-1,resist:2},0],["집에서는 가족과 조선어를 계속 사용한다.",{family:1,resist:1},0],["직장 평가를 위해 일본어 사용에 더 익숙해진다.",{safe:2,life:1,family:-1},1]]]
-],
-farmer:[
-["마을에서도 황국신민서사와 각종 의식 참여를 요구합니다. 면사무소와 마찰을 빚으면 생활에 불편이 생길 수 있습니다.",
- [["마을에서 요구하는 활동에 참여한다.",{safe:1,resist:-1},0],["불이익을 감수하고 참여하지 않는다.",{safe:-2,resist:2},0],["참여는 하되 가족에게 내 생각을 말한다.",{safe:-1,resist:1},0],["면사무소와 마찰을 피하기 위해 적극 참여한다.",{safe:2,life:1,family:-1},1]]],
-["마을 단위로 신사참배 참여가 요구됩니다. 빠지면 면사무소에서 이유를 물을 수 있습니다.",
- [["마을 사람들과 함께 참배한다.",{safe:1},0],["참배에 참여하지 않는다.",{safe:-2,resist:2},0],["참배는 하되 개인적으로 의미를 두지 않는다.",{family:1,resist:1},0],["생활 문제를 피하기 위해 성실히 참여한다.",{safe:2,life:1,family:-1},1]]],
-["새로운 씨를 신고하면 면사무소 업무가 편해질 수 있다는 이야기가 들립니다.",
- [["가족과 상의한 뒤 새로운 씨를 신고한다.",{safe:1,family:1},0],["불이익이 있더라도 기존 이름을 유지한다.",{safe:-1,resist:1},0],["신고는 하되 집에서는 원래 이름을 사용한다.",{life:1,family:1},0],["생활 편의를 위해 새 이름을 적극 사용한다.",{safe:2,life:1,family:-1},1]]],
-["마을에서도 일본어 사용을 권장하는 분위기가 생깁니다. 자녀 교육과 행정업무를 생각하면 일본어가 유리하다는 말이 들립니다.",
- [["공적인 자리에서는 일본어를 사용한다.",{safe:1},0],["가족과 이웃에게 조선어를 계속 쓰자고 한다.",{safe:-1,resist:2},0],["집에서는 계속 조선어를 사용한다.",{family:1,resist:1},0],["자녀와 생활을 위해 일본어를 적극 익힌다.",{safe:2,life:1,family:-1},1]]]
-]
-};
-
-const late=[
-{
-ctx:{student:"학교와 지역에서 근로 동원 참여를 요구합니다.",teacher:"교직원에게 학생 동원과 전시 업무를 맡으라는 지시가 내려옵니다.",worker:"공장에서 작업량과 동원 업무가 늘어납니다.",farmer:"농촌에서도 근로 동원과 물자 동원이 강화됩니다."},
-opts:[["요구받은 일에 참여하며 생활을 이어간다.",{life:1,safe:1},0],["불이익을 감수하고 가능한 범위에서 참여를 피한다.",{safe:-1,resist:1,life:-1},0],["참여하되 주변 사람을 도울 방법을 찾는다.",{family:1},0],["생활 안정을 위해 맡은 업무를 성실히 수행한다.",{safe:2,life:2,family:-1},1]]
-},
-{
-ctx:{student:"가정의 식량이 줄고 공출 부담이 커집니다.",teacher:"학교에서도 절약과 공출 협조를 독려하라는 분위기가 강해집니다.",worker:"배급이 줄고 생활물자가 부족해집니다.",farmer:"공출량이 늘어나 가족이 먹을 쌀도 빠듯합니다."},
-opts:[["요구받은 물자를 그대로 낸다.",{safe:1,life:-1},0],["위험을 감수하고 가족 몫 일부를 남긴다.",{safe:-2,family:2},0],["내 몫을 줄여 주변 사람과 나눈다.",{life:-1,family:1,resist:1},0],["문제를 피하기 위해 공출 관련 일을 돕는다.",{safe:2,life:1,family:-1},1]]
-},
-{
-ctx:{student:"징병과 노동 동원이 확대되며 본인이나 형제에게도 차례가 올 수 있습니다.",teacher:"학교에서 학생과 청년들에게 전쟁 참여를 독려하는 역할까지 요구받습니다.",worker:"공장 노동자에 대한 전쟁 동원이 강화됩니다.",farmer:"농촌 청년들 사이에서 징병과 동원 이야기가 퍼집니다."},
-opts:[["동원 요구를 받아들이고 상황에 따른다.",{safe:1,family:-1},0],["위험을 감수하고 동원을 피해 숨는다.",{safe:-3,resist:2,family:-1},0],["가족과 상의하며 다른 방법을 찾아본다.",{safe:-1,family:1},0],["가족의 불이익을 줄이기 위해 관련 업무에 협조한다.",{safe:2,life:2,family:-1},1]]
-},
-{
-ctx:{student:"전쟁이 길어지며 학교생활도 흔들립니다.",teacher:"전쟁 말기 학교는 전시체제의 한 부분이 되었습니다.",worker:"전쟁 말기 공장 노동과 생활이 더 불안정해집니다.",farmer:"전쟁이 길어지며 농촌의 생활은 더 어려워집니다."},
-opts:[["끝까지 가족과 가까운 사람의 생존을 우선한다.",{family:1},0],["가능한 범위에서 내 생각과 행동을 지키려 한다.",{resist:1},0],["상황에 따라 순응과 저항을 오가며 버틴다.",{safe:1},0],["지금까지 해 온 역할을 계속 이어간다.",{safe:2,life:1,family:-1},1]]
-}
-];
-
-let st={c:null,i:0,s:null,danger:0,coop:0,hist:[],ending:"",submitted:false};
-const A=()=>document.getElementById("app");
-
-const SAVE_KEY="history_sim_mobile_save_v1";
-
-function saveGame(){
-  try{
-    localStorage.setItem(SAVE_KEY, JSON.stringify(st));
-  }catch(e){}
-}
-
-function clearGameSave(){
-  try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
-}
-
-function loadGame(){
-  try{
-    const raw=localStorage.getItem(SAVE_KEY);
-    if(!raw) return null;
-    const data=JSON.parse(raw);
-    if(!data || !data.c || !data.s) return null;
-    return data;
-  }catch(e){ return null; }
-}
-
-function showResume(){
-  const saved=loadGame();
-  if(!saved){ start(); return; }
-  A().innerHTML=`<div class=card>
-  <h1>1938 : 식민지 조선에서 살아남기</h1>
-  <div class=context><b>이전 플레이 기록이 있습니다.</b><br>${saved.c?.name||""} (${saved.c?.role||""}) · 사건 ${Math.min((saved.i||0)+1,8)} 진행 중</div>
-  <button onclick=resumeGame()>이어하기</button>
-  <div style="height:10px"></div>
-  <button onclick=newGame()>처음부터 시작</button>
-  </div>`;
-}
-
-function resumeGame(){
-  const saved=loadGame();
-  if(!saved){ start(); return; }
-  st=saved;
-  show();
-}
-
-function newGame(){
-  clearGameSave();
-  st={c:null,i:0,s:null,danger:0,coop:0,hist:[],ending:"",submitted:false};
-  pickScreen();
-}
-
-
-function stats(){return `<div class=statbar>${["safe","life","resist","family"].map(k=>`<div class=stat>${({safe:"안전",life:"생계",resist:"저항",family:"가족"})[k]}<br><b>${st.s[k]}</b></div>`).join("")}<div class=stat>위험도<br><b>${st.danger}</b></div></div>`}
-function start(){A().innerHTML=`<div class=card><h1>1938 : 식민지 조선에서 살아남기</h1><p>같은 시대라도 인물의 처지에 따라 고민은 달라집니다.</p><button onclick=pickScreen()>게임 시작</button></div>`}
-function pickScreen(){A().innerHTML=`<div class=card><h2>캐릭터 선택</h2><div class=grid>${chars.map(c=>`<div class=char onclick="pick('${c.id}')"><b>${c.name} · ${c.role}</b><p>${c.intro}</p></div>`).join("")}</div></div>`}
-function pick(id){st.c=chars.find(x=>x.id===id);st.s={...st.c.start};st.i=0;st.danger=0;st.coop=0;st.hist=[];st.ending="";st.submitted=false;saveGame();show()}
-function current(){
- const b=base[st.i];
- if(st.i<4){const x=S[st.c.id][st.i];return {year:b[0],title:b[1],hist:b[2],ctx:x[0],opts:x[1]}}
- const x=late[st.i-4];return {year:b[0],title:b[1],hist:b[2],ctx:x.ctx[st.c.id],opts:x.opts}
-}
-function shuffled(opts){return opts.map((o,i)=>({o,i})).sort(()=>Math.random()-.5)}
-function show(){
- if(st.danger>5)return arrest();
- const e=current(), ord=shuffled(e.opts);st.ord=ord;
- A().innerHTML=`<div class=card><div>${e.year} · ${st.c.name} (${st.c.role})</div>${stats()}<h2>${e.title}</h2><div class=context>${e.ctx}</div>${ord.map((x,j)=>`<button class=option onclick=choose(${j})>${String.fromCharCode(65+j)}. ${x.o[0]}</button>`).join("")}</div>`
-}
-function apply(d){for(const k of ["safe","life","resist","family"]){const raw=st.s[k]+(d[k]||0);if(raw<0){st.danger+=-raw;st.s[k]=0}else st.s[k]=Math.min(10,raw)}}
-function choose(j){const e=current(),o=st.ord[j].o;apply(o[1]);st.coop+=o[2]||0;st.hist.push(`${e.year} ${e.title} → ${o[0]}`);saveGame();A().innerHTML=`<div class=card>${stats()}<h2>당신의 선택</h2><p><b>${o[0]}</b></p><div class=hist><b>역사적 배경</b><br>${e.hist}</div>${st.i<7?`<button onclick=next()>다음 사건 →</button>`:`<button onclick=end()>엔딩 보기 →</button>`}</div>`}
-function next(){st.i++;saveGame();show()}
-function arrest(){st.ending="경찰에 체포되다";saveGame();A().innerHTML=`<div class=card><h1>경찰에 체포되었습니다</h1>${stats()}<div class=warn>위험도가 5를 초과했습니다.</div><button onclick=reflect()>성찰 및 제출</button></div>`}
-function end(){if(st.coop>=6)st.ending="식민지배에 적극 협력한 사람";else{const k=Object.entries(st.s).sort((a,b)=>b[1]-a[1])[0][0];st.ending=({safe:"위험을 피한 사람",life:"생활 기반을 붙잡은 사람",resist:"저항을 이어간 사람",family:"가족을 지킨 사람"})[k]}saveGame();A().innerHTML=`<div class=card><h1>광복을 맞았습니다</h1>${stats()}<div class=hist><h2>END │ ${st.ending}</h2></div><button onclick=reflect()>성찰 및 제출</button></div>`}
-function reflect(){A().innerHTML=`<div class=card><h2>역사적 성찰 및 제출</h2><div class=row><div><div class=label>학번</div><input id=sid></div><div><div class=label>이름</div><input id=sname></div></div><div class=label>1. 가장 고민됐던 선택은 무엇이었나요?</div><textarea id=q1></textarea><div class=label>2. 식민지 상황에서 개인의 선택은 얼마나 자유로웠나요?</div><textarea id=q2></textarea><div class=label>3. ‘저항하지 않음’과 ‘식민지배에 동의함’은 같은 의미일까요?</div><textarea id=q3></textarea><div class=label>4. 민족말살정책이 조선인의 일상 깊숙이 개입했다는 근거는 무엇인가요?</div><textarea id=q4></textarea><div id=msg></div><button id=submitBtn onclick=submit()>교사에게 제출</button></div>`}
-async function submit(){
-  if(st.submitted){
-    document.getElementById("msg").innerHTML='<div class=ok>이미 제출이 완료되었습니다.</div>';
-    return;
-  }
-  const ids=["sid","sname","q1","q2","q3","q4"];
-  const v=Object.fromEntries(ids.map(x=>[x,document.getElementById(x).value.trim()]));
-  const m=document.getElementById("msg");
-  const btn=document.getElementById("submitBtn");
-  if(ids.some(x=>!v[x])){
-    m.innerHTML='<div class=warn>모든 항목을 작성해주세요.</div>';
-    return;
-  }
-  if(SUBMIT_URL.includes("PASTE_YOUR")){
-    m.innerHTML='<div class=warn>교사용 제출 주소가 연결되지 않았습니다.</div>';
-    return;
-  }
-  const p={
-    studentId:v.sid,studentName:v.sname,
-    characterName:st.c.name,characterRole:st.c.role,
-    safe:st.s.safe,life:st.s.life,resist:st.s.resist,family:st.s.family,
-    danger:st.danger,cooperation:st.coop,ending:st.ending,history:st.hist,
-    q1:v.q1,q2:v.q2,q3:v.q3,q4:v.q4
-  };
-  btn.disabled=true;
-  btn.textContent="제출 중...";
-  try{
-    const r=await fetch(SUBMIT_URL,{
-      method:"POST",
-      headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body:JSON.stringify(p)
-    });
-    const d=await r.json();
-    if(d.ok){
-      st.submitted=true;
-      saveGame();
-      m.innerHTML='<div class=ok>✓ 제출 완료되었습니다. 이 화면을 교사에게 확인받아도 됩니다.</div>';
-      btn.textContent="제출 완료";
-      btn.disabled=true;
-    }else{
-      m.innerHTML=`<div class=warn>${d.message||"제출 실패"}</div>`;
-      btn.disabled=false;
-      btn.textContent="교사에게 제출";
-    }
-  }catch(e){
-    m.innerHTML='<div class=warn>제출 연결에 실패했습니다. 인터넷 연결을 확인한 뒤 다시 시도해주세요.</div>';
-    btn.disabled=false;
-    btn.textContent="교사에게 제출";
-  }
-}
-
-window.addEventListener("beforeunload", saveGame);
-showResume();
-</script></body></html>
+const $=s=>document.querySelector(s),sh=a=>[...a].sort(()=>Math.random()-.5);
+const S={snd:1};let ctx;
+function fab(h){const f=$('#fb');f.innerHTML=h||'';f.style.display=h?'block':'none'}
+function beep(ok){try{navigator.vibrate&&navigator.vibrate(ok?30:[60,40,60])}catch(e){}if(!S.snd)return;try{ctx=ctx||new(window.AudioContext||window.webkitAudioContext)();ctx.resume();const o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime;o.connect(g);g.connect(ctx.destination);o.type=ok?'triangle':'sawtooth';o.frequency.setValueAtTime(ok?523:200,t);if(ok)o.frequency.setValueAtTime(784,t+.12);g.gain.setValueAtTime(.15,t);g.gain.exponentialRampToValueAtTime(.01,t+.3);o.start();o.stop(t+.3)}catch(e){}}
+function bar(t){return`<div class="bar"><button onclick="bk(this)">← 나가기</button><b>${t}</b><span>${S.i+1}/${S.q.length} · 🏆 <b id="sc">${S.sc}</b>점</span></div>`}
+function bk(b){if(b.dataset.a)return home();b.dataset.a=1;b.textContent='한 번 더 누르면 종료';setTimeout(()=>{b.dataset.a='';b.textContent='← 나가기'},2500)}
+function home(){fab();$('#app').innerHTML=`<h2>일제 식민 통치와 민족 운동</h2><p class="mu">22개정 한국사2 Ⅰ단원 · 통치 정책, 3·1 운동, 민족 운동의 전개와 분화, 사회·문화 변화</p><div class="g"><button class="card" onclick="startSpy()"><h3>미션 1. 스파이를 찾아라</h3><p class="mu">4장 중 성격·시기가 다른 1장을 찾습니다.<br>${SPY.length}라운드 · 정답 10점</p></button><button class="card" onclick="startTL()"><h3>미션 2. 타임라인 연대기</h3><p class="mu">사건 카드 5장을 과거 → 최근 순으로 배열합니다.<br>${TL.length}세트 · 만점 20점</p></button></div><p class="mu">매번 카드와 문제 순서가 바뀌고, 끝나면 틀린 문제를 모아 보여 줍니다.</p>`}
+function startSpy(){S.m='spy';S.q=sh(SPY);S.i=0;S.sc=0;S.wr=[];spy()}
+function spy(){fab();const r=S.q[S.i];S.cs=sh(r[1].map((c,k)=>({t:c[0],d:c[1],s:k==3})));S.done=0;
+$('#app').innerHTML=bar('미션 1 · 스파이 찾기')+`<div class="card"><h3>주제: ${r[0]}</h3><p class="mu">성격이나 시기가 다른 카드 1장을 고르세요.</p></div><div class="g">${S.cs.map((c,k)=>`<button class="card" id="c${k}" onclick="pick(${k})"><b>${'ABCD'[k]}. ${c.t}</b><p class="mu">${c.d}</p></button>`).join('')}</div><div id="res"></div>`}
+function pick(k){if(S.done)return;S.done=1;const r=S.q[S.i],c=S.cs[k],ok=c.s;
+S.cs.forEach((x,j)=>{if(x.s)$('#c'+j).classList.add('ok');else if(j==k)$('#c'+j).classList.add('no')});
+if(ok)S.sc+=10;else S.wr.push(`<b>${r[0]}</b> → 스파이: ${S.cs.find(x=>x.s).t}`);
+beep(ok);$('#sc').textContent=S.sc;
+$('#res').innerHTML=`<div class="card ${ok?'ok':'no'}"><span class="stamp">${ok?'검거 성공 +10':'놓쳤다'}</span><p>${r[2]}</p></div>`;fab(`<button class="b" onclick="nx()">${S.i+1<S.q.length?'다음 라운드':'결과 보기'}</button>`);
+$('#res').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function nx(){S.i++;S.i<S.q.length?(S.m=='spy'?spy():tl()):end()}
+function startTL(){S.m='tl';S.q=sh(TL);S.i=0;S.sc=0;S.wr=[];tl()}
+function tl(){const r=S.q[S.i];S.pool=sh(r[1].map((c,k)=>({k,y:c[0],t:c[1],x:c[2]})));S.sel=[];S.done=0;draw()}
+function draw(){const r=S.q[S.i],d=S.done;
+$('#app').innerHTML=bar('미션 2 · 타임라인')+`<div class="card"><h3>${r[0]}</h3><p class="mu">카드를 눌러 과거 → 최근 순서로 배치하세요. ▲▼로 순서를 바꿀 수 있습니다.</p></div>`+
+[0,1,2,3,4].map(i=>{const c=S.sel[i];return c?`<div class="card row${d?(c.k==i?' ok':' no'):''}"><span class="n">${i+1}</span><div>${d?`<span class="yr">${c.y}</span>`:''}<b>${c.t}</b>${d?`<p class="mu">${c.x}</p>`:''}</div>${d?(c.k==i?'✓':'✗'):`<span class="ctl"><button onclick="mv(${i},-1)" aria-label="위로">▲</button><button onclick="mv(${i},1)" aria-label="아래로">▼</button><button onclick="rm(${i})" aria-label="빼기">✕</button></span>`}</div>`:`<div class="slot">${i+1}번째 카드를 선택하세요</div>`}).join('')+
+(d?'':`<div class="g">${S.pool.map((c,i)=>`<button class="card" onclick="add(${i})"><b>${c.t}</b><p class="mu">${c.x}</p></button>`).join('')}</div>`)+'<div id="res"></div>';
+fab(d?'':`<button class="b" ${S.sel.length<5?'disabled':''} onclick="sub()">${S.sel.length<5?`카드를 모두 배치하세요 (${S.sel.length}/5)`:'연대기 제출'}</button>`);
+if(d){const n=S.sel.filter((c,i)=>c.k==i).length;$('#res').innerHTML=`<div class="card ${n==5?'ok':'no'}"><span class="stamp">${n==5?'완벽한 연대기 +20':n+'장 일치 +'+n*3}</span><h3>올바른 순서</h3><ol>${r[1].map(c=>`<li><span class="yr">${c[0]}</span><b>${c[1]}</b> — ${c[2]}</li>`).join('')}</ol></div>`;fab(`<button class="b" onclick="nx()">${S.i+1<S.q.length?'다음 세트':'결과 보기'}</button>`);$('#res').scrollIntoView({behavior:'smooth',block:'nearest'})}}
+function add(i){S.sel.push(S.pool.splice(i,1)[0]);draw()}
+function rm(i){S.pool.push(S.sel.splice(i,1)[0]);draw()}
+function mv(i,d){const j=i+d;if(j<0||j>=S.sel.length)return;[S.sel[i],S.sel[j]]=[S.sel[j],S.sel[i]];draw()}
+function sub(){const n=S.sel.filter((c,i)=>c.k==i).length;S.done=1;S.sc+=n==5?20:n*3;if(n<5)S.wr.push(`<b>${S.q[S.i][0]}</b> (${n}/5장 일치)`);beep(n==5);draw();$('#sc').textContent=S.sc}
+function end(){fab();const mx=S.q.length*(S.m=='spy'?10:20),p=S.sc/mx;
+const rk=p>=.9?'독립운동 수석 사학자':p>=.7?'역사 전문 탐정':p>=.5?'우수 수사관':'역사 입문자';
+const msg=p>=.7?'핵심 개념을 잘 정리했습니다.':'오답노트를 복습한 뒤 다시 도전해 보세요.';
+$('#app').innerHTML=`<div class="card"><h2>미션 종료</h2><p class="big">${S.sc} / ${mx}점</p><p>칭호: <b>${rk}</b><br><span class="mu">${msg}</span></p>${S.wr.length?`<h3>오답노트</h3><ul>${S.wr.map(w=>`<li>${w}</li>`).join('')}</ul>`:'<p><b>모두 맞혔습니다!</b></p>'}<button class="b" onclick="${S.m=='spy'?'startSpy':'startTL'}()">다시 도전</button><button class="b s" onclick="home()">메인으로</button></div>`;window.scrollTo(0,0)}
+home();
+</script>
+</body>
+</html>
